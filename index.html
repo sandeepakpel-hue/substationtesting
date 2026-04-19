@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Substation Equipment Testing Guide &amp; Troubleshooting System</title>
+<meta name="description" content="Complete solution for testing, analysis, and troubleshooting of substation equipment — Circuit Breakers, Transformers, CT/PT, Batteries. Created by Sandeep Kumar Sah.">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Sora:wght@300;400;500;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<link rel="shortcut icon" href="favicon.pngx" type="image/x-icon">
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════════════════════
+     LANDING OVERLAY  (hides main app until "Start" is clicked)
+     ════════════════════════════════════════════════════════════ -->
+<div id="landing-overlay">
+  <div id="pg-landing" class="page active"></div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════
+     CONTACT / ABOUT POPUP MODAL
+     ════════════════════════════════════════════════════════════ -->
+<div id="contactModal" class="modal-backdrop" onclick="handleBackdropClick(event,'contactModal')">
+  <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="contactModalTitle">
+
+    <div class="modal-header">
+      <div class="modal-title-row">
+        <div class="modal-icon-hex">ℹ️</div>
+        <div>
+          <h2 class="modal-title" id="contactModalTitle">About This System</h2>
+          <div class="modal-subtitle">Substation Equipment Testing Guide &amp; Troubleshooting</div>
+        </div>
+      </div>
+      <button class="modal-close-btn" onclick="closeContactPopup()" aria-label="Close">&times;</button>
+    </div>
+
+    <div class="modal-body">
+
+      <!-- Creator Card -->
+      <div class="about-creator-card">
+        <div class="creator-avatar-lg">SK</div>
+        <div class="about-creator-info">
+          <div class="about-creator-name">Sandeep Kumar Sah</div>
+          <div class="about-creator-role">Substation Protection &amp; Testing Engineer</div>
+          <div class="about-creator-email">📧 sandeepakpel@gmail.com</div>
+        </div>
+      </div>
+
+      <!-- Purpose -->
+      <div class="about-section">
+        <div class="about-section-title">🎯 Purpose of this System</div>
+        <p class="about-section-body">
+          This system serves as a comprehensive digital guide for field engineers and technicians
+          involved in substation commissioning and maintenance. It provides step-by-step testing
+          procedures, automated fault analysis, safety interlocks, troubleshooting logic, and
+          an AI-powered chat assistant — all in one place.
+        </p>
+      </div>
+
+      <!-- Coverage -->
+      <div class="about-section">
+        <div class="about-section-title">📦 Equipment Coverage</div>
+        <div class="about-coverage-grid">
+          <div class="about-cov-item"><span>⚡</span> Circuit Breakers (SF₆, Vacuum, Air-Blast)</div>
+          <div class="about-cov-item"><span>🔁</span> Power &amp; Distribution Transformers</div>
+          <div class="about-cov-item"><span>📡</span> Current &amp; Potential Transformers</div>
+          <div class="about-cov-item"><span>🔋</span> Station Batteries (VRLA, NiCd, Lead-Acid)</div>
+          <div class="about-cov-item"><span>🛡️</span> Safety Checks &amp; Interlock Verification</div>
+          <div class="about-cov-item"><span>📊</span> Automated Fault Report Generation</div>
+        </div>
+      </div>
+
+      <!-- Feedback CTA -->
+      <button class="about-feedback-btn" id="switchToFeedbackBtn" onclick="openFeedbackPopup()">
+        ✉️ Send Feedback or Suggestion
+      </button>
+
+    </div><!-- /modal-body -->
+  </div><!-- /modal-box -->
+</div><!-- /contactModal -->
+
+<!-- ════════════════════════════════════════════════════════════
+     FEEDBACK / SUGGESTION FORM MODAL
+     ════════════════════════════════════════════════════════════ -->
+<div id="feedbackModal" class="modal-backdrop" onclick="handleBackdropClick(event,'feedbackModal')">
+  <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="feedbackModalTitle">
+
+    <div class="modal-header">
+      <div class="modal-title-row">
+        <div class="modal-icon-hex">✉️</div>
+        <div>
+          <h2 class="modal-title" id="feedbackModalTitle">Feedback &amp; Suggestions</h2>
+          <div class="modal-subtitle">Help us improve the testing guide</div>
+        </div>
+      </div>
+      <button class="modal-close-btn" onclick="closeFeedbackPopup()" aria-label="Close">&times;</button>
+    </div>
+
+    <div class="modal-body">
+
+      <!-- Global error (email OR contact missing) -->
+      <div id="fbContactError" class="fb-error-global" role="alert"></div>
+
+      <form id="feedbackForm" onsubmit="submitFeedback(event)" novalidate autocomplete="off">
+
+        <div class="fb-grid-2">
+
+          <!-- Name -->
+          <div class="fg">
+            <label class="fl" for="fbName">Name <span class="fb-opt">(Optional)</span></label>
+            <input id="fbName" type="text" class="fi" placeholder="Your full name"
+                   maxlength="100" oninput="onFeedbackInput()">
+          </div>
+
+          <!-- Email -->
+          <div class="fg">
+            <label class="fl" for="fbEmail">Email <span class="fb-opt">(Optional*)</span></label>
+            <input id="fbEmail" type="email" class="fi" placeholder="you@example.com"
+                   maxlength="150" oninput="onFeedbackInput()">
+            <div id="fbEmailError" class="fb-field-error" role="alert"></div>
+          </div>
+
+          <!-- Contact Number -->
+          <div class="fg">
+            <label class="fl" for="fbContact">Contact Number <span class="fb-opt">(Optional*)</span></label>
+            <input id="fbContact" type="tel" class="fi" placeholder="10-digit mobile number"
+                   maxlength="10" pattern="\d{10}" oninput="onFeedbackInput()">
+            <div id="fbPhoneError" class="fb-field-error" role="alert"></div>
+          </div>
+
+          <!-- Equipment Type -->
+          <div class="fg">
+            <label class="fl" for="fbEquipment">Equipment Type <span class="fb-opt">(Optional)</span></label>
+            <select id="fbEquipment" class="fs" oninput="onFeedbackInput()">
+              <option value="">— Select Equipment —</option>
+              <option value="Circuit Breaker">Circuit Breaker</option>
+              <option value="Power Transformer">Power Transformer</option>
+              <option value="Current Transformer (CT)">Current Transformer (CT)</option>
+              <option value="Potential Transformer (PT)">Potential Transformer (PT)</option>
+              <option value="Station Battery">Station Battery</option>
+              <option value="Isolator / Disconnector">Isolator / Disconnector</option>
+              <option value="Protection Relay">Protection Relay</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+
+          <!-- Test Type -->
+          <div class="fg">
+            <label class="fl" for="fbTestType">Test Type <span class="fb-opt">(Optional)</span></label>
+            <select id="fbTestType" class="fs" oninput="onFeedbackInput()">
+              <option value="">— Select Test Type —</option>
+              <option value="Contact Resistance (DCRM)">Contact Resistance (DCRM)</option>
+              <option value="Timing Test">Timing Test</option>
+              <option value="SF6 Gas Pressure">SF6 Gas Pressure</option>
+              <option value="Insulation Resistance">Insulation Resistance</option>
+              <option value="Tan Delta / Dissipation Factor">Tan Delta / Dissipation Factor</option>
+              <option value="Transformer Ratio Test (TTR)">Transformer Ratio Test (TTR)</option>
+              <option value="Magnetisation / Excitation">Magnetisation / Excitation</option>
+              <option value="Battery Capacity / Discharge">Battery Capacity / Discharge</option>
+              <option value="Safety / Interlock Check">Safety / Interlock Check</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+
+        </div><!-- /fb-grid-2 -->
+
+        <!-- Message -->
+        <div class="fg">
+          <label class="fl" for="fbMessage">Message / Suggestion <span class="fb-opt">(Optional)</span></label>
+          <textarea id="fbMessage" class="ft" placeholder="Describe your feedback, bug report, or suggestion…"
+                    rows="4" maxlength="2000" oninput="onFeedbackInput()"></textarea>
+          <div class="fi-note">* At least Email OR Contact Number must be provided.</div>
+        </div>
+
+        <!-- Success message -->
+        <div id="fbSuccessMsg" class="fb-success" role="status" style="display:none"></div>
+
+        <!-- Submit -->
+        <div class="fb-actions">
+          <button type="button" class="btn btn-outline" onclick="closeFeedbackPopup()">Cancel</button>
+          <button id="fbSubmitBtn" type="submit" class="btn fb-submit-btn" disabled>
+            ✉️ Send Feedback
+          </button>
+        </div>
+
+      </form>
+    </div><!-- /modal-body -->
+  </div><!-- /modal-box -->
+</div><!-- /feedbackModal -->
+
+<!-- ════════════════════════════════════════════════════════════
+     MAIN APP  (initially hidden — revealed after landing CTA)
+     ════════════════════════════════════════════════════════════ -->
+
+<!-- HEADER -->
+<header class="header hidden-initially">
+  <div class="header-inner">
+    <div class="logo">
+      <div class="logo-hex">⚡</div>
+      <div>
+        <div class="logo-title">SUBSTATION TESTING GUIDE</div>
+        <div class="logo-sub">CIRCUIT BREAKERS · TRANSFORMERS · CT/PT · BATTERIES</div>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;">
+      <span class="header-breaker" id="hdrBreaker">Substation Equipment Testing &amp; Troubleshooting System</span>
+      <div class="header-tag"><div class="hpulse"></div>SYSTEM READY</div>
+      <button class="header-feedback-btn" onclick="openFeedbackPopup()" title="Send Feedback">
+        ✉️ Feedback
+      </button>
+      <!-- Hamburger (mobile only) -->
+      <button class="hamburger-btn" id="hamburgerBtn" aria-label="Toggle navigation" onclick="toggleMobileNav()">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- NAV — 7 sequential workflow pages -->
+<nav class="nav hidden-initially" id="mainNav">
+  <div class="nav-inner">
+    <button class="nav-btn active" id="navPage1" onclick="showPage('pg-select',this)">① Selection</button>
+    <button class="nav-btn" id="navPage2" onclick="showPage('pg-safety',this)">② Safety Check</button>
+    <button class="nav-btn" id="navPage3" onclick="showPage('pg-guide',this)">③ Test Guide</button>
+    <button class="nav-btn" id="navPage4" onclick="showPage('pg-conn',this)">④ Connections</button>
+    <button class="nav-btn" id="navPage5" onclick="showPage('pg-input',this)">⑤ Enter Results</button>
+    <button class="nav-btn" id="navPage6" onclick="showPage('pg-result',this)">⑥ Fault Report</button>
+    <button class="nav-btn" id="navPage7" onclick="showPage('pg-chat',this)">⑦ Troubleshoot</button>
+  </div>
+</nav>
+
+<main class="main hidden-initially">
+  <!-- 7 independent workflow pages -->
+  <div id="pg-select" class="page active"></div>
+  <div id="pg-safety" class="page"></div>
+  <div id="pg-guide"  class="page"></div>
+  <div id="pg-conn"   class="page"></div>
+  <div id="pg-input"  class="page"></div>
+  <div id="pg-result" class="page"></div>
+  <div id="pg-chat"   class="page"></div>
+</main>
+
+<!-- ════════════════════════════════════════════════════════════
+     SCRIPT LOADING ORDER:
+     1. EmailJS SDK
+     2. data.js            — CB-specific breaker data (legacy)
+     3. workflow-data.js   — Multi-equipment workflow JSON
+     4. js/workflow.js     — Core workflow state + stage renderers
+     5. js/workflow-standalone.js — Standalone page renderers
+     6. js/landing.js      — Landing page, contact popup, feedback form
+     7. app.js             — Navigation & initialization
+     ════════════════════════════════════════════════════════════ -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script src="data.js"></script>
+<script src="workflow-data.js"></script>
+<script src="js/workflow.js"></script>
+<script src="js/workflow-standalone.js"></script>
+<script src="js/landing.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
