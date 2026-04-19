@@ -7,7 +7,7 @@
 <meta name="description" content="Complete solution for testing, analysis, and troubleshooting of substation equipment — Circuit Breakers, Transformers, CT/PT, Batteries. Created by Sandeep Kumar Sah.">
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Sora:wght@300;400;500;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
-<link rel="shortcut icon" href="favicon.pngx" type="image/x-icon">
+<link rel="shortcut icon" href="./favicon.png" type="image/x-icon">
 </head>
 <body>
 
@@ -251,12 +251,59 @@
      6. js/landing.js      — Landing page, contact popup, feedback form
      7. app.js             — Navigation & initialization
      ════════════════════════════════════════════════════════════ -->
+<script>
+window.__showBootError = function (message) {
+  if (document.getElementById('bootErrorBox')) return;
+  var box = document.createElement('div');
+  box.id = 'bootErrorBox';
+  box.style.cssText = [
+    'position:fixed',
+    'left:16px',
+    'right:16px',
+    'top:16px',
+    'z-index:12000',
+    'background:#ffffff',
+    'border:1px solid #dc2626',
+    'border-left:4px solid #dc2626',
+    'padding:12px 14px',
+    'border-radius:8px',
+    'font-family:Arial,sans-serif',
+    'font-size:13px',
+    'color:#1f2937',
+    'box-shadow:0 10px 24px rgba(0,0,0,.15)'
+  ].join(';');
+  box.innerHTML =
+    '<strong style="display:block;color:#991b1b;margin-bottom:6px">App failed to initialize</strong>' +
+    '<div style="line-height:1.45">' + message + '</div>';
+  document.body.appendChild(box);
+};
+
+window.__bootScriptMissing = function (filePath) {
+  window.__showBootError(
+    'Missing script: <code>' + filePath + '</code>. ' +
+    'Check deploy root directory and confirm all JS files are uploaded with index.html.'
+  );
+};
+
+document.addEventListener('DOMContentLoaded', function () {
+  setTimeout(function () {
+    var landing = document.getElementById('pg-landing');
+    if (landing && !landing.innerHTML.trim()) {
+      window.__showBootError(
+        'Landing UI did not render. Verify deployment contains ' +
+        '<code>index.html</code>, <code>styles.css</code>, <code>data.js</code>, ' +
+        '<code>workflow-data.js</code> and all files in <code>js/</code>.'
+      );
+    }
+  }, 1800);
+});
+</script>
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-<script src="data.js"></script>
-<script src="workflow-data.js"></script>
-<script src="js/workflow.js"></script>
-<script src="js/workflow-standalone.js"></script>
-<script src="js/landing.js"></script>
-<script src="app.js"></script>
+<script src="./data.js" onerror="window.__bootScriptMissing('./data.js')"></script>
+<script src="./workflow-data.js" onerror="window.__bootScriptMissing('./workflow-data.js')"></script>
+<script src="./js/workflow.js" onerror="window.__bootScriptMissing('./js/workflow.js')"></script>
+<script src="./js/workflow-standalone.js" onerror="window.__bootScriptMissing('./js/workflow-standalone.js')"></script>
+<script src="./js/landing.js" onerror="window.__bootScriptMissing('./js/landing.js')"></script>
+<script src="./app.js" onerror="window.__bootScriptMissing('./app.js')"></script>
 </body>
 </html>
