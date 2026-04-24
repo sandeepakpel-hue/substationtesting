@@ -303,7 +303,7 @@ const SAFETY_CHECKS = {
       'Earth switch closed on line side (physically confirmed)',
       'Portable earthing clamps applied at test points (both L and B terminals)',
       'LOTO (Lock-Out Tag-Out) applied — danger tags placed on isolator operating handles',
-      'PTW/SFT obtained from RTAMC / Control Room',
+      'PTW/SFT obtained from HQ/Control Room',
     ]
   },
   controlSupply: {
