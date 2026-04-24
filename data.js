@@ -67,8 +67,8 @@ const BREAKER_DATA = {
       { designation: 'R1', description: 'Trip Supervision Resistor', rating: '3.3 kΩ, 35W / 2.7kΩ, 50W' },
     ],
     limits: {
-      open: [40, 60],       // Open time min/max in ms
-      close: [50, 80],      // Close time min/max in ms
+      open: [15, 25],       // Open time min/max in ms
+      close: [50, 150],      // Close time min/max in ms
       poleDiff: 3,          // Max pole difference in ms
       cr: 60,               // Contact resistance pass limit (µΩ)
       crWarn: 100,          // Contact resistance reject limit (µΩ)
