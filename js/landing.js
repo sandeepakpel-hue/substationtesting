@@ -133,9 +133,9 @@ function renderLanding() {
           <div class="landing-creator">
             <div class="creator-avatar">SK</div>
             <div>
-              <div class="creator-label">CREATED BY</div>
+              <div class="creator-label">DEVELOPED BY</div>
               <div class="creator-name">Sandeep Kumar Sah</div>
-              <div class="creator-role">Substation Protection &amp; Testing Engineer</div>
+              <div class="creator-role">Electrical Engineer & Web Developer</div>
             </div>
           </div>
           <div class="landing-links">
