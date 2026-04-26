@@ -57,12 +57,13 @@ const WORKFLOW_DATA = {
               steps: [
                 { num: 1, title: 'Setup CB Analyzer', body: 'Connect control circuit (TC and CC), Timing, and Auxiliary leads to the CB analyzer (e.g., SCOPE-HISAC ULTIMA)' },
                 { num: 2, title: 'Configure Software Settings', body: 'Open CBA software and configure breaker type, breaker information, system settings, and channel selection etc' },
-                { num: 3, title: 'Perform Opening Test (C)', body: 'Energize Close Coil CC via test set. Breaker closes. Record closing time for R, Y, B phases. Check pole discrepancy time (max allowed = 5 ms)' },
+                { num: 3, title: 'Perform Closing Test (C)', body: 'Energize Close Coil CC via test set. Breaker closes. Record closing time for R, Y, B phases. Check pole discrepancy time (max allowed = 5 ms)' },
                 { num: 4, title: 'Charge Spring', body: 'Allow spring to complete full charging cycle. Confirm spring charged indicator turns ON (green). Do NOT proceed until spring is fully charged.' },
-                { num: 5, title: 'Perform Closing Test (O)', body: 'Energize Trip Coil TC1/TC2 via test set. Breaker opens. Record opening time for R, Y, B phases individually.check pole discrepancy time (max allowed = 5 ms)' },
-                { num: 6, title: 'Perform O-C-O Sequence', body: 'Execute the auto-reclosure sequence: Open  0.3s Close 3 min Open. Record all operation times and current waveforms.' },
-                { num: 7, title: 'Record & Verify Results', body: 'Note all timing values in test report. Compare with type test values from Previous/factory test report and standard limits below.' },
-                { num: 8, title: 'Restore & Document', body: 'Leave breaker in OPEN position. Apply Earthing both sides of CB, Restore control, supply,Auxiliary connections. Remove test leads safely. Return in PTW.' }
+                { num: 5, title: 'Perform Opening Test (O)', body: 'Energize Trip Coil TC1/TC2 via test set. Breaker opens. Record opening time for R, Y, B phases individually.check pole discrepancy time (max allowed = 5 ms)' },
+                { num: 6, title: 'Perform C-O Sequence', body: 'Execute the Close Open sequence: Close open( Open command at least 10ms prior to contact touch during close operation. Record all operation times.' },
+                { num: 7, title: 'Perform O-C-O Sequence', body: 'Execute the auto-reclosure sequence: Open  0.3s Close 3 min Open. Record all operation times.' },
+                { num: 8, title: 'Record & Verify Results', body: 'Note all timing values in test report. Compare with type test values from Previous/factory test report and standard limits below.' },
+                { num: 9, title: 'Restore & Document', body: 'Leave breaker in OPEN position. Apply Earthing both sides of CB, Restore control, supply,Auxiliary connections. Remove test leads safely. Return in PTW.' }
               ],
               limits: [
                 { param: 'Opening Time (O)', unit: 'ms', min: null, max: 25, critical: 'WARN' },
@@ -83,7 +84,7 @@ const WORKFLOW_DATA = {
                 ],
                 precautions: [
                   'Use insulated probes rated 1000 V CAT III',
-                  'Do NOT energize TC and CC simultaneously â€” severe damage risk',
+                  'Do NOT energize TC and CC simultaneously severe damage risk',
                   'Ensure station earth continuity before test',
                   'Stand clear of breaker during all operations',
                   'Use remote operation / avoid manual close during test'
