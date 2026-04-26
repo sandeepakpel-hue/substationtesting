@@ -102,12 +102,12 @@ const WORKFLOW_DATA = {
                 ]
               },
               inputs: [
-                { id: 'trip_r', label: 'Opening Time â€” R Phase', unit: 'ms', type: 'number', min: 10, max: 25, warn: 24, step: 0.1 },
-                { id: 'trip_y', label: 'Opening Time â€” Y Phase', unit: 'ms', type: 'number', min: 10, max: 25, warn: 24, step: 0.1 },
-                { id: 'trip_b', label: 'Opening Time â€” B Phase', unit: 'ms', type: 'number', min: 10, max: 25, warn: 24, step: 0.1 },
-                { id: 'close_r', label: 'Closing Time â€” R Phase', unit: 'ms', type: 'number', min: 50, max: 150, warn: 130, step: 0.1 },
-                { id: 'close_y', label: 'Closing Time â€” Y Phase', unit: 'ms', type: 'number', min: 50, max: 150, warn: 130, step: 0.1 },
-                { id: 'close_b', label: 'Closing Time â€” B Phase', unit: 'ms', type: 'number', min: 50, max: 150, warn: 130, step: 0.1 },
+                { id: 'trip_r', label: 'Opening Time R Phase', unit: 'ms', type: 'number', min: null, max: 25, warn: 24, step: 0.1 },
+                { id: 'trip_y', label: 'Opening Time Y Phase', unit: 'ms', type: 'number', min: null, max: 25, warn: 24, step: 0.1 },
+                { id: 'trip_b', label: 'Opening Time B Phase', unit: 'ms', type: 'number', min: null, max: 25, warn: 24, step: 0.1 },
+                { id: 'close_r', label: 'Closing Time R Phase', unit: 'ms', type: 'number', min: null, max: 150, warn: 130, step: 0.1 },
+                { id: 'close_y', label: 'Closing Time Y Phase', unit: 'ms', type: 'number', min: null, max: 150, warn: 130, step: 0.1 },
+                { id: 'close_b', label: 'Closing Time  B Phase', unit: 'ms', type: 'number', min: null, max: 150, warn: 130, step: 0.1 },
                 { id: 'pd_trip', label: 'Pole Discrepancy (Trip)', unit: 'ms', type: 'number', min: 0, max: 3.3, warn: 3, step: 0.1 },
                 { id: 'pd_close', label: 'Pole Discrepancy (Close)', unit: 'ms', type: 'number', min: 0, max: 5, warn: 4.5, step: 0.1 }
               ],
