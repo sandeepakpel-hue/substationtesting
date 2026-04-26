@@ -57,20 +57,20 @@ const WORKFLOW_DATA = {
               steps: [
                 { num: 1, title: 'Setup CB Analyzer', body: 'Connect control circuit (TC and CC), Timing, and Auxiliary leads to the CB analyzer (e.g., SCOPE-HISAC ULTIMA)' },
                 { num: 2, title: 'Configure Software Settings', body: 'Open CBA software and configure breaker type, breaker information, system settings, and channel selection etc' },
-                { num: 3, title: 'Perform Opening Test (O)', body: 'Energize Trip Coil TC1 via test set. Breaker opens. Record opening time for R, Y, B phases individually. Calculate pole discrepancy (max allowed = 3 ms).' },
+                { num: 3, title: 'Perform Opening Test (C)', body: 'Energize Close Coil CC via test set. Breaker closes. Record closing time for R, Y, B phases. Check pole discrepancy time (max allowed = 5 ms)' },
                 { num: 4, title: 'Charge Spring', body: 'Allow spring to complete full charging cycle. Confirm spring charged indicator turns ON (green). Do NOT proceed until spring is fully charged.' },
-                { num: 5, title: 'Perform Closing Test (C)', body: 'Energize Close Coil CC via test set. Breaker closes. Record closing time for R, Y, B phases. Calculate pole discrepancy.' },
-                { num: 6, title: 'Perform O-C-O Sequence', body: 'Execute the auto-reclosure sequence: Open â†’ 0.3s â†’ Close â†’ 3 min â†’ Open. Record all operation times and current waveforms.' },
-                { num: 7, title: 'Record & Verify Results', body: 'Note all timing values in test report. Compare with type test values from factory test certificate and standard limits below.' },
-                { num: 8, title: 'Restore & Document', body: 'Leave breaker in CLOSED position. Restore control supply connections. Remove test leads safely. Apply earthing if required. Sign off in PTW.' }
+                { num: 5, title: 'Perform Closing Test (O)', body: 'Energize Trip Coil TC1/TC2 via test set. Breaker opens. Record opening time for R, Y, B phases individually.check pole discrepancy time (max allowed = 5 ms)' },
+                { num: 6, title: 'Perform O-C-O Sequence', body: 'Execute the auto-reclosure sequence: Open  0.3s Close 3 min Open. Record all operation times and current waveforms.' },
+                { num: 7, title: 'Record & Verify Results', body: 'Note all timing values in test report. Compare with type test values from Previous/factory test report and standard limits below.' },
+                { num: 8, title: 'Restore & Document', body: 'Leave breaker in OPEN position. Apply Earthing both sides of CB, Restore control, supply,Auxiliary connections. Remove test leads safely. Return in PTW.' }
               ],
               limits: [
                 { param: 'Opening Time (O)', unit: 'ms', min: 10, max: 25, critical: 'WARN' },
                 { param: 'Closing Time (C)', unit: 'ms', min: 50, max: 150, critical: 'WARN' },
-                { param: 'Pole Discrepancy â€” Opening', unit: 'ms', min: null, max: 3.3, critical: 'WARN' },
-                { param: 'Pole Discrepancy â€” Closing', unit: 'ms', min: null, max: 5, critical: 'WARN' },
-                { param: 'Trip Coil 1 Current (pick-up)', unit: 'A', min: 1.5, max: 4.0, critical: 'WARN' },
-                { param: 'Close Coil Current (pick-up)', unit: 'A', min: 1.5, max: 5.0, critical: 'WARN' }
+                { param: 'Pole Discrepancy Opening', unit: 'ms', min: null, max: 3.3, critical: 'WARN' },
+                { param: 'Pole Discrepancy Closing', unit: 'ms', min: null, max: 5, critical: 'WARN' },
+                { param: 'Break to Break mismatch', unit: 'A', min: 0, max: 2.5, critical: 'WARN' },
+                { param: 'Close open time(CO)', unit: 'A', min: 35, max: NA, critical: 'WARN' }
               ],
               connections: {
                 description: 'Connect CB Analyzer between the breaker control cabinet and the breaker. Current clamps on coil leads for waveform capture. Auxiliary contacts (52a/52b) trigger timing start/stop.',
