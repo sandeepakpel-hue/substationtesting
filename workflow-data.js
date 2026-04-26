@@ -44,14 +44,15 @@ const WORKFLOW_DATA = {
                 'Multimeter'
               ],
               preChecks: [
-                'Verify SF6 gas pressure 7.0 bar at pressure gauge in All Phase',
-                'Check control supply voltage: 110 V DC at breaker terminals',
-                'Ensure breaker is in CLOSED position before timing test',
-                'Confirm spring is CHARGED green indicator lamp ON',
-                'Isolate all protection relay outputs (trip output contacts)',
-                'Verify anti-pumping relay K15V is functional',
+                'Ensure CB and both side isolators of CB are physically open and AC/DC supplies are OFF',
+                'Ensure earthing is applied on both sides of CB;Remove only during testing',
                 'Circuit Breaker Analyzer body should be earthed',
-                'Ensure earthing is applied on both sides of CB;reove only during testing'
+                'Connect timing leads across the CB Contacts and to the CB Analyzer Kit',
+                'Isolate all protection relay outputs (trip output contacts),if Required',
+                'Check control supply voltage: 110 V DC at breaker MB terminals',
+                'Verify SF6 gas pressure 7.0 bar at pressure gauge in All Phase',
+                'Circuit Breaker Analyzer body should be earthed',
+                'Ensure AC Supply is available in MB and connect to the analuzer'
               ],
               steps: [
                 { num: 1, title: 'Setup CB Analyzer', body: 'Connect the CB analyzer (e.g. CBA-1000) to the breaker control circuit. Connect current clamp probes on Trip Coil TC1 and Close Coil CC leads. Connect breaker auxiliary contact 52a/52b to timing start/stop inputs.' },
