@@ -65,10 +65,10 @@ const WORKFLOW_DATA = {
                 { num: 8, title: 'Restore & Document', body: 'Leave breaker in CLOSED position. Restore control supply connections. Remove test leads safely. Apply earthing if required. Sign off in PTW.' }
               ],
               limits: [
-                { param: 'Opening Time (O)', unit: 'ms', min: 40, max: 60, critical: 'FAIL' },
-                { param: 'Closing Time (C)', unit: 'ms', min: 50, max: 80, critical: 'FAIL' },
-                { param: 'Pole Discrepancy â€” Opening', unit: 'ms', min: null, max: 3, critical: 'FAIL' },
-                { param: 'Pole Discrepancy â€” Closing', unit: 'ms', min: null, max: 3, critical: 'FAIL' },
+                { param: 'Opening Time (O)', unit: 'ms', min: 10, max: 25, critical: 'WARN' },
+                { param: 'Closing Time (C)', unit: 'ms', min: 50, max: 150, critical: 'WARN' },
+                { param: 'Pole Discrepancy â€” Opening', unit: 'ms', min: null, max: 3.3, critical: 'WARN' },
+                { param: 'Pole Discrepancy â€” Closing', unit: 'ms', min: null, max: 5, critical: 'WARN' },
                 { param: 'Trip Coil 1 Current (pick-up)', unit: 'A', min: 1.5, max: 4.0, critical: 'WARN' },
                 { param: 'Close Coil Current (pick-up)', unit: 'A', min: 1.5, max: 5.0, critical: 'WARN' }
               ],
@@ -82,7 +82,7 @@ const WORKFLOW_DATA = {
                   { tb: '52b-R', relay: 'AUX 52b', function: 'Open Position Signal', note: 'Timer Stop' }
                 ],
                 precautions: [
-                  'Use insulated probes rated â‰¥ 1000 V CAT III',
+                  'Use insulated probes rated 1000 V CAT III',
                   'Do NOT energize TC and CC simultaneously â€” severe damage risk',
                   'Ensure station earth continuity before test',
                   'Stand clear of breaker during all operations',
@@ -90,14 +90,14 @@ const WORKFLOW_DATA = {
                 ]
               },
               inputs: [
-                { id: 'trip_r', label: 'Opening Time â€” R Phase', unit: 'ms', type: 'number', min: 40, max: 60, warn: 58, step: 0.1 },
-                { id: 'trip_y', label: 'Opening Time â€” Y Phase', unit: 'ms', type: 'number', min: 40, max: 60, warn: 58, step: 0.1 },
-                { id: 'trip_b', label: 'Opening Time â€” B Phase', unit: 'ms', type: 'number', min: 40, max: 60, warn: 58, step: 0.1 },
-                { id: 'close_r', label: 'Closing Time â€” R Phase', unit: 'ms', type: 'number', min: 50, max: 80, warn: 78, step: 0.1 },
-                { id: 'close_y', label: 'Closing Time â€” Y Phase', unit: 'ms', type: 'number', min: 50, max: 80, warn: 78, step: 0.1 },
-                { id: 'close_b', label: 'Closing Time â€” B Phase', unit: 'ms', type: 'number', min: 50, max: 80, warn: 78, step: 0.1 },
-                { id: 'pd_trip', label: 'Pole Discrepancy (Trip)', unit: 'ms', type: 'number', min: 0, max: 3, warn: 2.5, step: 0.1 },
-                { id: 'pd_close', label: 'Pole Discrepancy (Close)', unit: 'ms', type: 'number', min: 0, max: 3, warn: 2.5, step: 0.1 }
+                { id: 'trip_r', label: 'Opening Time â€” R Phase', unit: 'ms', type: 'number', min: 10, max: 25, warn: 24, step: 0.1 },
+                { id: 'trip_y', label: 'Opening Time â€” Y Phase', unit: 'ms', type: 'number', min: 10, max: 25, warn: 24, step: 0.1 },
+                { id: 'trip_b', label: 'Opening Time â€” B Phase', unit: 'ms', type: 'number', min: 10, max: 25, warn: 24, step: 0.1 },
+                { id: 'close_r', label: 'Closing Time â€” R Phase', unit: 'ms', type: 'number', min: 50, max: 150, warn: 130, step: 0.1 },
+                { id: 'close_y', label: 'Closing Time â€” Y Phase', unit: 'ms', type: 'number', min: 50, max: 150, warn: 130, step: 0.1 },
+                { id: 'close_b', label: 'Closing Time â€” B Phase', unit: 'ms', type: 'number', min: 50, max: 150, warn: 130, step: 0.1 },
+                { id: 'pd_trip', label: 'Pole Discrepancy (Trip)', unit: 'ms', type: 'number', min: 0, max: 3.3, warn: 3, step: 0.1 },
+                { id: 'pd_close', label: 'Pole Discrepancy (Close)', unit: 'ms', type: 'number', min: 0, max: 5, warn: 4.5, step: 0.1 }
               ],
               troubleshooting: [
                 {
