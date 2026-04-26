@@ -44,8 +44,8 @@ const WORKFLOW_DATA = {
                 'Multimeter'
               ],
               preChecks: [
-                'Verify SF6 gas pressure 7.0 bar (abs) at 20Â°C',
-                'Check control supply voltage: 110 V DC (Â±10%) at breaker terminals',
+                'Verify SF6 gas pressure 7.0 bar at pressure gauge in All Phase',
+                'Check control supply voltage: 110 V DC at breaker terminals',
                 'Ensure breaker is in CLOSED position before timing test',
                 'Confirm spring is CHARGED â€” green indicator lamp ON',
                 'Isolate all protection relay outputs (trip output contacts)',
