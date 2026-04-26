@@ -65,12 +65,12 @@ const WORKFLOW_DATA = {
                 { num: 8, title: 'Restore & Document', body: 'Leave breaker in OPEN position. Apply Earthing both sides of CB, Restore control, supply,Auxiliary connections. Remove test leads safely. Return in PTW.' }
               ],
               limits: [
-                { param: 'Opening Time (O)', unit: 'ms', min: 10, max: 25, critical: 'WARN' },
-                { param: 'Closing Time (C)', unit: 'ms', min: 50, max: 150, critical: 'WARN' },
+                { param: 'Opening Time (O)', unit: 'ms', min: null, max: 25, critical: 'WARN' },
+                { param: 'Closing Time (C)', unit: 'ms', min: null, max: 150, critical: 'WARN' },
                 { param: 'Pole Discrepancy Opening', unit: 'ms', min: null, max: 3.3, critical: 'WARN' },
                 { param: 'Pole Discrepancy Closing', unit: 'ms', min: null, max: 5, critical: 'WARN' },
                 { param: 'Break to Break mismatch', unit: 'A', min: 0, max: 2.5, critical: 'WARN' },
-                { param: 'Close open time(CO)', unit: 'A', min: 35, max: NA, critical: 'WARN' }
+                { param: 'Close open time(CO)', unit: 'A', min: 35, max: null, critical: 'WARN' }
               ],
               connections: {
                 description: 'Connect CB Analyzer between the breaker control cabinet and the breaker. Current clamps on coil leads for waveform capture. Auxiliary contacts (52a/52b) trigger timing start/stop.',
