@@ -55,7 +55,7 @@ const WORKFLOW_DATA = {
                 'Verify communication between analyzer and laptop via Analyzer software'
               ],
               steps: [
-                { num: 1, title: 'Setup CB Analyzer', body: 'Connect the CB analyzer (e.g. CBA-1000) to the breaker control circuit. Connect current clamp probes on Trip Coil TC1 and Close Coil CC leads. Connect breaker auxiliary contact 52a/52b to timing start/stop inputs.' },
+                { num: 1, title: 'Setup CB Analyzer', body: 'Connect control circuit (TC and CC), Timing, and Auxiliary leads to the CB analyzer (e.g., SCOPE-HISAC ULTIMA)' },
                 { num: 2, title: 'Configure Software Settings', body: 'Open CBA software. Set parameters: Rated control voltage = 110 V DC, Test type = Open / Close / O-C-O, Poles = 3-phase, Record waveforms = ON.' },
                 { num: 3, title: 'Perform Opening Test (O)', body: 'Energize Trip Coil TC1 via test set. Breaker opens. Record opening time for R, Y, B phases individually. Calculate pole discrepancy (max allowed = 3 ms).' },
                 { num: 4, title: 'Charge Spring', body: 'Allow spring to complete full charging cycle. Confirm spring charged indicator turns ON (green). Do NOT proceed until spring is fully charged.' },
