@@ -70,8 +70,8 @@ const WORKFLOW_DATA = {
                 { param: 'Closing Time (C)', unit: 'ms', min: null, max: 150, critical: 'WARN' },
                 { param: 'Pole Discrepancy Opening', unit: 'ms', min: null, max: 3.3, critical: 'WARN' },
                 { param: 'Pole Discrepancy Closing', unit: 'ms', min: null, max: 5, critical: 'WARN' },
-                { param: 'Break to Break mismatch', unit: 'A', min: 0, max: 2.5, critical: 'WARN' },
-                { param: 'Close open time(CO)', unit: 'A', min: 35, max: null, critical: 'WARN' }
+                { param: 'Break to Break mismatch', unit: 'ms', min: 0, max: 2.5, critical: 'WARN' },
+                { param: 'Close open time(CO)', unit: 'ms', min: 35, max: null, critical: 'WARN' }
               ],
               connections: {
                 description: 'Connect CB Analyzer between the breaker control cabinet and the breaker. Current clamps on coil leads for waveform capture. Auxiliary contacts (52a/52b) trigger timing start/stop.',
