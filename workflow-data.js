@@ -77,8 +77,8 @@ const WORKFLOW_DATA = {
               connections: {
                 description: 'Connect CB Analyzer between the breaker control cabinet and the breaker. Current clamps on coil leads for waveform capture. Auxiliary contacts (52a/52b) trigger timing start/stop.',
                 terminals: [
-                  { tb: 'TB1-1', relay: 'TC1 +ve', function: 'Trip Coil 1 Main DC', note: '+ 110V DC' },
-                  { tb: 'TB1-5/6', relay: 'TC2 +ve', function: 'Trip Coil 2 Main DC', note: '+ 110V DC' },
+                  { tb: 'TB2-46', relay: 'Source 1 +ve', function: 'Trip Coil 1/ Close Main DC', note: '+ 110V DC' },
+                  { tb: 'TB2-54', relay: 'Source +ve', function: 'Trip Coil 2 Main DC', note: '+ 110V DC' },
                   { tb: 'TB2-1/2', relay: 'CC +ve', function: 'Close Coil Main DC', note: '+ 110V DC' },
                   { tb: '52a-R', relay: 'AUX 52a', function: 'Closed Position Signal', note: 'Timer Start' },
                   { tb: '52b-R', relay: 'AUX 52b', function: 'Open Position Signal', note: 'Timer Stop' }
