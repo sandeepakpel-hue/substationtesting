@@ -51,6 +51,7 @@ const WORKFLOW_DATA = {
                 'Isolate all protection relay outputs (trip output contacts),if Required',
                 'Check control supply voltage: 110 V DC at breaker MB terminals',
                 'Verify SF6 gas pressure 7.0 bar at pressure gauge in All Phase',
+                'Verify Air pressure 15.0 bar at pressure gauge',
                 'Ensure AC Supply is available in MB and connect to the analyzer',
                 'Verify communication between analyzer and laptop via Analyzer software'
               ],
