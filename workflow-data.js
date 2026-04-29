@@ -32,7 +32,7 @@ const WORKFLOW_DATA = {
               id: 'timing',
               name: 'Timing Test',
               objective: 'Verify that the circuit breaker opens and closes within specified time limits per IEC 62271-100 to ensure correct system protection grading.',
-              tools: [
+              t2ols: [
                 'Circuit Breaker Analyzer / Timing Kit',
                 'Laptop with CB Analyzer Software',
                 'Control cables (Trip/Close command cables)',
@@ -51,6 +51,7 @@ const WORKFLOW_DATA = {
                 'Isolate all protection relay outputs (trip output contacts),if Required',
                 'Check control supply voltage: 110 V DC at breaker MB terminals',
                 'Verify SF6 gas pressure 7.0 bar at pressure gauge in All Phase',
+                'Verify Air pressure 15.0 bar at pressure gauge',
                 'Ensure AC Supply is available in MB and connect to the analyzer',
                 'Verify communication between analyzer and laptop via Analyzer software'
               ],
@@ -63,7 +64,7 @@ const WORKFLOW_DATA = {
                 { num: 6, title: 'Perform C-O Sequence', body: 'Execute the Close Open sequence: Close open( Open command at least 10ms prior to contact touch during close operation. Record all operation times.(min allowed = 35 ms)' },
                 { num: 7, title: 'Perform O-C-O Sequence', body: 'Execute the OCO sequence. Record all operation times.' },
                 { num: 8, title: 'Record & Verify Results', body: 'Note all timing values in test report. Compare with type test values from Previous/factory test report and standard limits below.' },
-                { num: 9, title: 'Restore & Document', body: 'Leave the breaker in OPEN position. Apply earthing on both sides of the CB. Restore all control, supply, and auxiliary connections.Remove all test leads safely. After clearance of PTW, remove earthing, close associated isolators, and then close the circuit breaker.' }
+                { num: 9, title: 'Restore & Document', body: 'Leave the breaker in OPEN position. Apply earthing on both sides of the CB. Restore all control, supply, and auxiliary connections. Remove all test leads safely. After clearance of PTW, remove earthing, close associated isolators, and then close the circuit breaker.' }
               ],
               limits: [
                 { param: 'Opening Time (O)', unit: 'ms', min: null, max: 25, critical: 'WARN' },
@@ -76,8 +77,8 @@ const WORKFLOW_DATA = {
               connections: {
                 description: 'Connect CB Analyzer between the breaker control cabinet and the breaker. Current clamps on coil leads for waveform capture. Auxiliary contacts (52a/52b) trigger timing start/stop.',
                 terminals: [
-                  { tb: 'TB2-46', relay: 'Source 1 +ve', function: 'Trip Coil 1/ Close Main DC', note: '+ 110V DC' },
-                  { tb: 'TB2-54', relay: 'Source +ve', function: 'Trip Coil 2 Main DC', note: '+ 110V DC' },
+                  { tb: 'TB1-1', relay: 'TC1 +ve', function: 'Trip Coil 1 Main DC', note: '+ 110V DC' },
+                  { tb: 'TB1-5/6', relay: 'TC2 +ve', function: 'Trip Coil 2 Main DC', note: '+ 110V DC' },
                   { tb: 'TB2-1/2', relay: 'CC +ve', function: 'Close Coil Main DC', note: '+ 110V DC' },
                   { tb: '52a-R', relay: 'AUX 52a', function: 'Closed Position Signal', note: 'Timer Start' },
                   { tb: '52b-R', relay: 'AUX 52b', function: 'Open Position Signal', note: 'Timer Stop' }
