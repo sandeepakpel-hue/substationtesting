@@ -32,7 +32,7 @@ const WORKFLOW_DATA = {
               id: 'timing',
               name: 'Timing Test',
               objective: 'Verify that the circuit breaker opens and closes within specified time limits per IEC 62271-100 to ensure correct system protection grading.',
-              tools: [
+              t2ols: [
                 'Circuit Breaker Analyzer / Timing Kit',
                 'Laptop with CB Analyzer Software',
                 'Control cables (Trip/Close command cables)',
