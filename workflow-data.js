@@ -63,7 +63,7 @@ const WORKFLOW_DATA = {
                 { num: 6, title: 'Perform C-O Sequence', body: 'Execute the Close Open sequence: Close open( Open command at least 10ms prior to contact touch during close operation. Record all operation times.' },
                 { num: 7, title: 'Perform O-C-O Sequence', body: 'Execute the auto-reclosure sequence: Open  0.3s Close 3 min Open. Record all operation times.' },
                 { num: 8, title: 'Record & Verify Results', body: 'Note all timing values in test report. Compare with type test values from Previous/factory test report and standard limits below.' },
-                { num: 9, title: 'Restore & Document', body: 'Leave breaker in OPEN position. Apply Earthing both sides of CB, Restore control, supply,Auxiliary connections. Remove test leads safely. Return in PTW.' }
+                { num: 9, title: 'Restore & Document', body: 'Leave the breaker in OPEN position. Apply earthing on both sides of the CB. Restore all control, supply, and auxiliary connections. Remove all test leads safely. After clearance of PTW, remove earthing, close associated isolators, and then close the circuit breaker.' }
               ],
               limits: [
                 { param: 'Opening Time (O)', unit: 'ms', min: null, max: 25, critical: 'WARN' },
