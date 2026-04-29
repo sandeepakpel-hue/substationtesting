@@ -59,9 +59,9 @@ const WORKFLOW_DATA = {
                 { num: 2, title: 'Configure Software Settings', body: 'Open CBA software and configure breaker type, breaker information, system settings, and channel selection etc' },
                 { num: 3, title: 'Perform Closing Test (C)', body: 'Energize Close Coil CC via test set. Breaker closes. Record closing time for R, Y, B phases. Check pole discrepancy time (max allowed = 5 ms)' },
                 { num: 4, title: 'Charge Spring', body: 'Allow spring to complete full charging cycle. Confirm spring charged indicator turns ON (green). Do NOT proceed until spring is fully charged.' },
-                { num: 5, title: 'Perform Opening Test (O)', body: 'Energize Trip Coil TC1/TC2 via test set. Breaker opens. Record opening time for R, Y, B phases individually.check pole discrepancy time (max allowed = 5 ms)' },
-                { num: 6, title: 'Perform C-O Sequence', body: 'Execute the Close Open sequence: Close open( Open command at least 10ms prior to contact touch during close operation. Record all operation times.' },
-                { num: 7, title: 'Perform O-C-O Sequence', body: 'Execute the auto-reclosure sequence: Open  0.3s Close 3 min Open. Record all operation times.' },
+                { num: 5, title: 'Perform Opening Test (O)', body: 'Energize Trip Coil TC1/TC2 via test set. Breaker opens. Record opening time for R, Y, B phases individually.check pole discrepancy time (max allowed = 3.3 ms)' },
+                { num: 6, title: 'Perform C-O Sequence', body: 'Execute the Close Open sequence: Close open( Open command at least 10ms prior to contact touch during close operation. Record all operation times.(min allowed = 35 ms)' },
+                { num: 7, title: 'Perform O-C-O Sequence', body: 'Execute the OCO sequence. Record all operation times.' },
                 { num: 8, title: 'Record & Verify Results', body: 'Note all timing values in test report. Compare with type test values from Previous/factory test report and standard limits below.' },
                 { num: 9, title: 'Restore & Document', body: 'Leave the breaker in OPEN position. Apply earthing on both sides of the CB. Restore all control, supply, and auxiliary connections. Remove all test leads safely. After clearance of PTW, remove earthing, close associated isolators, and then close the circuit breaker.' }
               ],
