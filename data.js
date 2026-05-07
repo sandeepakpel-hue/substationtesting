@@ -67,8 +67,8 @@ const BREAKER_DATA = {
       { designation: 'R1', description: 'Trip Supervision Resistor', rating: '3.3 kΩ, 35W / 2.7kΩ, 50W' },
     ],
     limits: {
-      open: [15, 25],       // Open time min/max in ms
-      close: [50, 150],      // Close time min/max in ms
+      open: [40, 60],       // Open time min/max in ms
+      close: [50, 80],      // Close time min/max in ms
       poleDiff: 3,          // Max pole difference in ms
       cr: 60,               // Contact resistance pass limit (µΩ)
       crWarn: 100,          // Contact resistance reject limit (µΩ)
@@ -303,7 +303,7 @@ const SAFETY_CHECKS = {
       'Earth switch closed on line side (physically confirmed)',
       'Portable earthing clamps applied at test points (both L and B terminals)',
       'LOTO (Lock-Out Tag-Out) applied — danger tags placed on isolator operating handles',
-      'PTW/SFT obtained from HQ/Control Room',
+      'PTW/SFT obtained from RTAMC / Control Room',
     ]
   },
   controlSupply: {

@@ -386,17 +386,10 @@ function wfRenderGuide() {
           </div>
         </li>`).join('')}</ul>`)}
 
-      ${wfCard('📐', 'STANDARD LIMITS', `
-        <div class="tbl-wrap"><table class="tbl">
-          <thead><tr><th>Parameter</th><th>Min</th><th>Max</th><th>Unit</th><th>On Fail</th></tr></thead>
-          <tbody>${t.limits.map(l=>`<tr>
-            <td>${l.param}</td>
-            <td class="mono">${l.min !== null ? l.min : '—'}</td>
-            <td class="mono">${l.max !== null ? l.max : '—'}</td>
-            <td class="mono">${l.unit}</td>
-            <td><span class="badge ${l.critical==='FAIL'?'b-fail':l.critical==='WARN'?'b-warn':'b-info'}">${l.critical}</span></td>
-          </tr>`).join('')}</tbody>
-        </table></div>`)}
+      <div class="alert a-info" style="margin-top:8px;">
+        <div class="alert-title">📐 Standard Limits Available on Enter Results Page</div>
+        <div class="alert-body">All test limits (min/max/warning thresholds) are displayed inline on the <strong>⑤ Enter Results</strong> page next to each input field, with real-time colour-coded validation.</div>
+      </div>
     </div>
   `;
 }
@@ -488,11 +481,32 @@ function wfRenderResults() {
                     oninput="wfOnResult('${inp.id}', this.value)">
                   <span class="wf-ri-badge" id="rb_${inp.id}"></span>
                 </div>
+                <div class="wf-limit-hint" id="lh_${inp.id}">${wfLimitHint(inp)}</div>
                 <div class="iind" id="rid_${inp.id}"></div>
               </div>`).join('')}
           </div>
         </div>
       </div>
+
+      ${t.limits && t.limits.length ? `
+      <div class="card wf-sec" style="margin-top:14px;">
+        <div class="card-head">
+          <span class="card-icon">📐</span>
+          <span class="card-title">STANDARD LIMITS — QUICK REFERENCE</span>
+        </div>
+        <div class="card-body" style="padding:0;">
+          <div class="tbl-wrap"><table class="tbl">
+            <thead><tr><th>Parameter</th><th>Min</th><th>Max</th><th>Unit</th><th>Severity</th></tr></thead>
+            <tbody>${t.limits.map(l=>`<tr>
+              <td>${l.param}</td>
+              <td class="mono">${l.min!==null?`<span class="wf-lim-min">${l.min}</span>`:'—'}</td>
+              <td class="mono">${l.max!==null?`<span class="wf-lim-max">${l.max}</span>`:'—'}</td>
+              <td class="mono">${l.unit||'—'}</td>
+              <td><span class="badge ${l.critical==='FAIL'?'b-fail':l.critical==='WARN'?'b-warn':'b-info'}">${l.critical}</span></td>
+            </tr>`).join('')}</tbody>
+          </table></div>
+        </div>
+      </div>` : ''}
 
       <div id="wfResErr" class="wf-err-msg" style="display:none">
         ⚠️ Please enter at least one result value before proceeding.
@@ -501,6 +515,17 @@ function wfRenderResults() {
   `;
   // Re-validate previously entered values
   Object.entries(WF.results).forEach(([id, val]) => { if (val !== '') wfOnResult(id, String(val)); });
+}
+
+// Helper: build static limit hint string for a given input definition
+function wfLimitHint(inp) {
+  const parts = [];
+  if (inp.min !== null && inp.max !== null) parts.push(`${inp.min} – ${inp.max} ${inp.unit||''}`);
+  else if (inp.max !== null) parts.push(`≤ ${inp.max} ${inp.unit||''}`);
+  else if (inp.min !== null) parts.push(`≥ ${inp.min} ${inp.unit||''}`);
+  if (!parts.length) return '';
+  const warn = inp.warn !== null ? ` &nbsp;<span class="wf-lh-warn">warn @ ${inp.warn}</span>` : '';
+  return `<span class="wf-lh-text">Limit: ${parts[0]}${warn}</span>`;
 }
 
 function wfOnResult(id, value) {
@@ -541,6 +566,9 @@ function wfOnResult(id, value) {
   if (ind)   { ind.textContent = msg; ind.className = `iind ${status}`; }
   if (input) input.className = `fi wf-ri ${status}`;
   if (fg)    fg.className = `fg wf-inp-group ${status}-group`;
+  // Update limit hint chip colour (works for both embedded and standalone renderers)
+  const lh = document.getElementById(`lh_${id}`);
+  if (lh) lh.className = `wf-limit-hint lh-${status}`;
 }
 
 function wfValidateResults() {
@@ -711,6 +739,9 @@ function wfRenderTroubleshoot() {
   const t  = WF.test;
   const tb = t ? t.troubleshooting : null;
 
+  const issueOptions = (!tb || !tb.length) ? '' :
+    tb.map((tr, i) => `<option value="${i}">${tr.condition}</option>`).join('');
+
   c.innerHTML = `
     <div class="wf-stage">
       <div class="wf-stage-hdr">
@@ -721,46 +752,43 @@ function wfRenderTroubleshoot() {
         </div>
       </div>
 
-      ${(!tb || !tb.length) ? `
-        <div class="wf-fallback">
-          <div class="wf-fallback-icon">🔍</div>
-          <div class="wf-fallback-title">Troubleshooting data not available for this case</div>
-          <div class="wf-fallback-sub">We are continuously expanding the knowledge base. Submit your problem below and our engineers will respond.</div>
-          <button class="btn btn-primary" onclick="wfScrollToForm()">📬 Submit Problem Form ↓</button>
+      <div class="card wf-sec">
+        <div class="card-head">
+          <span class="card-icon">🔍</span>
+          <span class="card-title">ISSUE-SPECIFIC TROUBLESHOOTING</span>
         </div>
-      ` : `
-        ${wfCard('📚', 'KNOWN ISSUES &amp; SOLUTIONS', `
-          ${tb.map((tr,i) => `
-            <div class="facc">
-              <div class="facc-head warn-head" onclick="tog(this)">
-                <div>
-                  <div class="facc-title">⚠️ ${tr.condition}</div>
-                  <div class="facc-val">${tr.causes.length} possible cause(s)</div>
-                </div>
-                <div class="facc-arr">▼</div>
-              </div>
-              <div class="facc-body">
-                <div class="facc-2col">
-                  <div>
-                    <div class="facc-sec-label">Possible Causes</div>
-                    <ul class="facc-list">${tr.causes.map(x=>`<li>${x}</li>`).join('')}</ul>
-                  </div>
-                  <div>
-                    <div class="facc-sec-label">Recommended Actions</div>
-                    <ul class="facc-list">${tr.actions.map(x=>`<li>${x}</li>`).join('')}</ul>
-                  </div>
-                </div>
-              </div>
-            </div>`).join('')}
-        `)}
-      `}
+        <div class="card-body">
+          ${(!tb || !tb.length) ? `
+            <div class="wf-fallback">
+              <div class="wf-fallback-icon">🔍</div>
+              <div class="wf-fallback-title">Troubleshooting data not available. Please submit your issue.</div>
+              <div class="wf-fallback-sub">Use the Submit Problem form below and our engineers will respond within 24–48 hours.</div>
+              <button class="btn btn-primary" style="margin-top:14px" onclick="wfScrollToForm()">📬 Submit Your Issue ↓</button>
+            </div>
+          ` : `
+            <div class="wf-ts-search-row">
+              <input id="wfTsSearch" class="fi" type="text" placeholder="🔍  Search issue e.g. 'not opening', 'slow', 'discrepancy'…"
+                oninput="wfTsFilter(this.value)" style="margin-bottom:10px;">
+            </div>
+            <div class="fg" style="margin-bottom:16px;">
+              <label class="fl">Select Issue</label>
+              <select id="wfTsSel" class="fs" onchange="wfTsShow(this.value)">
+                <option value="">— Select an issue to view causes &amp; solutions —</option>
+                ${issueOptions}
+              </select>
+            </div>
+            <div id="wfTsPanel" class="wf-ts-panel" style="display:none;"></div>
+          `}
+        </div>
+      </div>
 
-      <!-- Chat Troubleshooting -->
-      ${wfCard('💬', 'AI TROUBLESHOOT CHAT', `
+      <!-- SETT Chat -->
+      ${wfCard('<span class="sett-icon-sm">⚙️</span>', 'SETT — Smart Equipment Troubleshooting Tool', `
+        <p style="font-size:12px;color:var(--text3);font-family:var(--mono);margin-bottom:10px;">POWERED BY SETT · Equipment-specific context loaded</p>
         <div class="chat-wrap" id="wfChat"></div>
         <div class="quick-chips">
           ${(tb||[]).slice(0,4).map(tr=>`
-            <div class="chip" onclick="wfChatQuery('${tr.condition.replace(/'/g,"\\'")}')">
+            <div class="chip" onclick="wfChatQuery('${tr.condition.replace(/'/g,"\\'").replace(/"/g,'&quot;')}')">
               ${tr.condition.length > 40 ? tr.condition.slice(0,40)+'…' : tr.condition}
             </div>`).join('')}
           <div class="chip" onclick="wfScrollToForm()">📬 Submit Problem</div>
@@ -772,7 +800,7 @@ function wfRenderTroubleshoot() {
         </div>
       `)}
 
-      <!-- Submit Problem Form — always visible at bottom of troubleshoot stage -->
+      <!-- Submit Problem Form -->
       <div class="card wf-sec" id="wfProbCard">
         <div class="card-head"><span class="card-icon">📬</span><span class="card-title">SUBMIT PROBLEM REPORT</span></div>
         <div class="card-body">
@@ -789,15 +817,62 @@ function wfRenderTroubleshoot() {
     </div>
   `;
 
-  // Init chat
+  // Init SETT chat
   wfChatInit();
 }
 
-// ─── Chat Functions ───────────────────────────────────────────
+// Smart troubleshooting — filter the select options by search text
+function wfTsFilter(q) {
+  const sel = document.getElementById('wfTsSel');
+  if (!sel) return;
+  const tb = WF.test ? WF.test.troubleshooting : [];
+  const lower = q.toLowerCase().trim();
+  // Rebuild options
+  sel.innerHTML = '<option value="">— Select an issue —</option>' +
+    tb.map((tr, i) => {
+      const match = !lower || tr.condition.toLowerCase().includes(lower) ||
+                    tr.causes.join(' ').toLowerCase().includes(lower);
+      return match ? `<option value="${i}">${tr.condition}</option>` : '';
+    }).join('');
+  // Clear detail panel
+  const panel = document.getElementById('wfTsPanel');
+  if (panel) { panel.style.display = 'none'; panel.innerHTML = ''; }
+}
+
+// Show detail panel for a selected issue index
+function wfTsShow(idx) {
+  const panel = document.getElementById('wfTsPanel');
+  if (!panel) return;
+  if (idx === '' || idx === null || idx === undefined) {
+    panel.style.display = 'none'; panel.innerHTML = ''; return;
+  }
+  const tb = WF.test ? WF.test.troubleshooting : [];
+  const tr = tb[parseInt(idx, 10)];
+  if (!tr) { panel.style.display = 'none'; return; }
+  panel.style.display = 'block';
+  panel.innerHTML = `
+    <div class="wf-ts-detail">
+      <div class="wf-ts-condition">⚠️ ${tr.condition}</div>
+      <div class="facc-2col" style="margin-top:14px;">
+        <div>
+          <div class="facc-sec-label">Possible Causes</div>
+          <ul class="facc-list">${tr.causes.map(x=>`<li>${x}</li>`).join('')}</ul>
+        </div>
+        <div>
+          <div class="facc-sec-label">Recommended Actions</div>
+          <ul class="facc-list">${tr.actions.map(x=>`<li>${x}</li>`).join('')}</ul>
+        </div>
+      </div>
+    </div>
+  `;
+  panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+// ─── Chat Functions (SETT) ───────────────────────────────────
 function wfChatInit() {
   setTimeout(() => {
     const t = WF.test;
-    wfChatAddMsg(`Hello! I'm your troubleshooting assistant for <strong>${WF.equipment.name} – ${t.name}</strong>.<br>Describe your fault symptom and I'll help identify causes and recommended actions.`, 'ai');
+    wfChatAddMsg(`<strong>⚙️ SETT — Smart Equipment Troubleshooting Tool</strong><br>Online for <strong>${WF.equipment.name} – ${t.name}</strong>.<br>Describe your fault symptom and I'll identify causes and recommended actions.`, 'ai');
   }, 100);
 }
 function wfChatSend() {
@@ -806,7 +881,17 @@ function wfChatSend() {
   if (!q) return;
   wfChatAddMsg(q, 'user');
   inp.value = '';
-  setTimeout(() => wfChatAddMsg(wfChatMatch(q), 'ai'), 500);
+  // Hide suggestion chips after first interaction
+  const sugg = document.getElementById('sett-suggestions');
+  if (sugg) { sugg.style.opacity = '0'; setTimeout(() => sugg.remove(), 300); }
+  // Show typing indicator
+  const typingId = 'sett-typing-' + Date.now();
+  wfChatAddTyping(typingId);
+  setTimeout(() => {
+    const typingEl = document.getElementById(typingId);
+    if (typingEl) typingEl.remove();
+    wfChatAddMsg(wfChatMatch(q), 'ai');
+  }, 700);
 }
 function wfChatQuery(text) {
   const inp = document.getElementById('wfChatInp');
@@ -817,8 +902,19 @@ function wfChatAddMsg(html, role) {
   if (!wrap) return;
   const d = document.createElement('div');
   d.className = `chat-msg${role === 'user' ? ' user' : ''}`;
-  d.innerHTML = `<div class="chat-av ${role === 'ai' ? 'ai' : 'usr'}">${role === 'ai' ? 'AI' : 'ME'}</div>
+  d.innerHTML = `<div class="chat-av ${role === 'ai' ? 'ai' : 'usr'}">${role === 'ai' ? '<span class="sett-av-gear">⚙️</span>' : '<span>👤</span>'}</div>
                  <div class="chat-bbl ${role === 'ai' ? 'ai' : 'usr'}">${html}</div>`;
+  wrap.appendChild(d);
+  wrap.scrollTop = wrap.scrollHeight;
+}
+function wfChatAddTyping(id) {
+  const wrap = document.getElementById('wfChat');
+  if (!wrap) return;
+  const d = document.createElement('div');
+  d.id = id;
+  d.className = 'chat-msg';
+  d.innerHTML = `<div class="chat-av ai"><span class="sett-av-gear">⚙️</span></div>
+                 <div class="chat-bbl ai"><div class="sett-typing"><span></span><span></span><span></span></div></div>`;
   wrap.appendChild(d);
   wrap.scrollTop = wrap.scrollHeight;
 }
@@ -826,22 +922,40 @@ function wfChatMatch(q) {
   const tb = WF.test ? WF.test.troubleshooting : [];
   if (!tb || !tb.length) {
     wfScrollToForm();
-    return `I don't have troubleshooting data for <strong>${WF.test ? WF.test.name : 'this test'}</strong>.<br>Please use the <strong>Submit Problem Form</strong> below.`;
+    return `<div class="sett-no-data">⚠️ We are updating ourselves, kindly fill the form below for resolving the issue.</div>`;
   }
-  const words = q.toLowerCase().split(/\s+/).filter(w => w.length > 3);
-  const matched = tb.filter(tr => {
-    const hay = (tr.condition + ' ' + tr.causes.join(' ')).toLowerCase();
-    return words.some(w => hay.includes(w));
-  });
-  if (!matched.length) {
+  const lower = q.toLowerCase().trim();
+  // 1. Exact condition match
+  let match = tb.find(tr => tr.condition.toLowerCase() === lower);
+  // 2. Condition includes query
+  if (!match) match = tb.find(tr => tr.condition.toLowerCase().includes(lower));
+  // 3. Query includes a word from condition
+  if (!match) match = tb.find(tr => lower.includes(tr.condition.toLowerCase()));
+  // 4. Keyword search across condition + causes (words > 2 chars)
+  if (!match) {
+    const words = lower.split(/\s+/).filter(w => w.length > 2);
+    match = tb.find(tr => {
+      const hay = (tr.condition + ' ' + tr.causes.join(' ')).toLowerCase();
+      return words.some(w => hay.includes(w));
+    });
+  }
+  if (!match) {
     wfScrollToForm();
-    return `I couldn't match "<em>${q}</em>" to a known issue for this test.<br>Try describing the symptom differently, or choose a quick chip above.<br>You can also <strong>Submit a Problem Report</strong> below.`;
+    return `<div class="sett-no-data">⚠️ We are updating ourselves, kindly fill the form below for resolving the issue.</div>`;
   }
-  return matched.map(tr => `
-    <strong>⚠️ ${tr.condition}</strong><br><br>
-    <b>Possible Causes:</b><ul>${tr.causes.map(c=>`<li>${c}</li>`).join('')}</ul>
-    <b>Recommended Actions:</b><ul>${tr.actions.map(a=>`<li>${a}</li>`).join('')}</ul>
-  `).join('<hr style="margin:10px 0;border-color:rgba(0,0,0,0.1)">');
+  return `
+    <div class="sett-result">
+      <div class="sett-result-issue">⚠️ ${match.condition}</div>
+      <div class="sett-result-section">
+        <div class="sett-result-label">🔍 Possible Causes</div>
+        <ul class="sett-result-list">${match.causes.map(c => `<li>${c}</li>`).join('')}</ul>
+      </div>
+      <div class="sett-result-section">
+        <div class="sett-result-label">✅ Recommended Solutions</div>
+        <ul class="sett-result-list">${match.actions.map(a => `<li>${a}</li>`).join('')}</ul>
+      </div>
+    </div>
+  `;
 }
 function wfScrollToForm() {
   const card = document.getElementById('wfProbCard');

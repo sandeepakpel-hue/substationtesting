@@ -258,17 +258,10 @@ function renderSaGuide() {
           <div class="step-body">${s.body}</div>
         </div>
       </li>`).join('')}</ul>`)}
-    ${wfCard('LIMITS', 'STANDARD LIMITS', `
-      <div class="tbl-wrap"><table class="tbl">
-        <thead><tr><th>Parameter</th><th>Min</th><th>Max</th><th>Unit</th><th>On Fail</th></tr></thead>
-        <tbody>${t.limits.map(l => `<tr>
-          <td>${l.param}</td>
-          <td class="mono">${l.min !== null ? l.min : '—'}</td>
-          <td class="mono">${l.max !== null ? l.max : '—'}</td>
-          <td class="mono">${l.unit}</td>
-          <td><span class="badge ${l.critical === 'FAIL' ? 'b-fail' : l.critical === 'WARN' ? 'b-warn' : 'b-info'}">${l.critical}</span></td>
-        </tr>`).join('')}</tbody>
-      </table></div>`)}`;
+    <div class="alert a-info" style="margin-top:8px;">
+      <div class="alert-title">📐 Standard Limits on Enter Results</div>
+      <div class="alert-body">All test limits (min/max/warning thresholds) are shown inline on the <strong>➕ Enter Results</strong> page next to each input field with real-time ✅ green / ⚠️ yellow / ❌ red validation.</div>
+    </div>`;
 
   saWrap(el, 2, content);
 }
@@ -323,21 +316,66 @@ function renderSaConnection() {
       </div>
     </div>
 
-    ${wfCard('⚡', 'TERMINAL CONNECTION POINTS', `
-      <div class="tbl-wrap"><table class="tbl">
-        <thead><tr><th>Terminal / TB</th><th>Lead / Relay</th><th>Function</th><th>Note</th></tr></thead>
-        <tbody>${conn.terminals.map(t => `<tr>
-          <td class="mono">${t.tb}</td>
-          <td class="mono">${t.relay}</td>
-          <td>${t.function}</td>
-          <td class="mono" style="color:var(--amber)">${t.note || '—'}</td>
-        </tr>`).join('')}</tbody>
-      </table></div>`)}
+    <!-- ── Terminal Block Connection Points ───────────────── -->
+    <div class="card wf-sec">
+      <div class="card-head">
+        <span class="card-icon">⚡</span>
+        <span class="card-title">TERMINAL BLOCK (TB) CONNECTION POINTS</span>
+      </div>
+      <div class="card-body" style="padding-bottom:4px;">
+
+        <!-- DC Positive Supply -->
+        <div class="tb-group-label tb-label-pos">🔴 DC Positive Supply (+110V DC)</div>
+        <div class="tb-card-grid">
+          ${conn.terminals.filter(t => t.voltage === '+').map(t => `
+            <div class="tb-card tb-card-pos">
+              <div class="tb-point">${t.tb}</div>
+              <div class="tb-relay">${t.relay}</div>
+              <div class="tb-func">${t.function}</div>
+              <div class="tb-volt tb-volt-pos">${t.note}</div>
+            </div>`).join('')}
+        </div>
+
+        <!-- DC Negative Returns — grouped by phase -->
+        <div class="tb-group-label tb-label-neg" style="margin-top:16px;">🔵 DC Negative Returns (−110V DC)</div>
+        <div class="tb-phase-grid">
+          ${['R','Y','B'].map(phase => {
+            const pts = conn.terminals.filter(t => t.voltage === '-' && t.relay.includes(`(${phase})`));
+            const phaseColor = phase === 'R' ? 'var(--red)' : phase === 'Y' ? 'var(--amber)' : 'var(--blue)';
+            return `
+            <div class="tb-phase-col">
+              <div class="tb-phase-hdr" style="background:${phaseColor}">${phase}-Phase</div>
+              ${pts.map(t => `
+                <div class="tb-card tb-card-neg">
+                  <div class="tb-point">${t.tb}</div>
+                  <div class="tb-relay">${t.relay}</div>
+                  <div class="tb-func">${t.function}</div>
+                  <div class="tb-volt tb-volt-neg">${t.note}</div>
+                </div>`).join('')}
+            </div>`;
+          }).join('')}
+        </div>
+
+        <!-- Auxiliary Contacts -->
+        <div class="tb-group-label" style="margin-top:16px;color:var(--text3);">⚙️ Auxiliary Contacts (Timer Trigger)</div>
+        <div class="tb-card-grid">
+          ${conn.terminals.filter(t => t.voltage === '').map(t => `
+            <div class="tb-card tb-card-aux">
+              <div class="tb-point">${t.tb}</div>
+              <div class="tb-relay">${t.relay}</div>
+              <div class="tb-func">${t.function}</div>
+              <div class="tb-volt tb-volt-aux">${t.note}</div>
+            </div>`).join('')}
+        </div>
+
+      </div>
+    </div>
 
     ${conn.precautions ? wfCard('⚠️', 'CONNECTION PRECAUTIONS', `<ul class="wf-list warn-list">${conn.precautions.map(p => `<li>${p}</li>`).join('')}</ul>`) : ''}`;
 
   saWrap(el, 3, content);
 }
+
 
 // ══════════════════════════════════════════════════════════════
 //  PAGE 5 — ENTER RESULTS
@@ -388,11 +426,32 @@ function renderSaResults() {
                   oninput="wfOnResult('${inp.id}', this.value)">
                 <span class="wf-ri-badge" id="rb_${inp.id}"></span>
               </div>
+              <div class="wf-limit-hint" id="lh_${inp.id}">${saLimitHint(inp)}</div>
               <div class="iind" id="rid_${inp.id}"></div>
             </div>`).join('')}
         </div>
       </div>
     </div>
+
+    ${t.limits && t.limits.length ? `
+    <div class="card wf-sec" style="margin-top:14px;">
+      <div class="card-head">
+        <span class="card-icon">📐</span>
+        <span class="card-title">STANDARD LIMITS — QUICK REFERENCE</span>
+      </div>
+      <div class="card-body" style="padding:0;">
+        <div class="tbl-wrap"><table class="tbl">
+          <thead><tr><th>Parameter</th><th>Min</th><th>Max</th><th>Unit</th><th>Severity</th></tr></thead>
+          <tbody>${t.limits.map(l => `<tr>
+            <td>${l.param}</td>
+            <td class="mono">${l.min !== null ? `<span class="wf-lim-min">${l.min}</span>` : '—'}</td>
+            <td class="mono">${l.max !== null ? `<span class="wf-lim-max">${l.max}</span>` : '—'}</td>
+            <td class="mono">${l.unit || '—'}</td>
+            <td><span class="badge ${l.critical === 'FAIL' ? 'b-fail' : l.critical === 'WARN' ? 'b-warn' : 'b-info'}">${l.critical}</span></td>
+          </tr>`).join('')}</tbody>
+        </table></div>
+      </div>
+    </div>` : ''}
 
     <div id="wfResErr" class="wf-err-msg" style="display:none">
       ⚠️ Please enter at least one result value before proceeding.
@@ -514,9 +573,9 @@ function renderSaReport() {
   saWrap(el, 5, content);
 }
 
-// ══════════════════════════════════════════════════════════════
-//  PAGE 7 — TROUBLESHOOT
-// ══════════════════════════════════════════════════════════════
+// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
+//  PAGE 7 \u2014 TROUBLESHOOT
+// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
 function renderSaTroubleshoot() {
   const el = document.getElementById('pg-chat');
   if (!el) return;
@@ -524,82 +583,101 @@ function renderSaTroubleshoot() {
   if (!WF.test) {
     saWrap(el, 6, saPrereqBox(
       'Please complete <strong>Step 1: Selection</strong> first to access troubleshooting.',
-      '← Go to Selection', 'pg-select', 'navPage1'
+      '\u2190 Go to Selection', 'pg-select', 'navPage1'
     ));
     return;
   }
 
-  const t  = WF.test;
-  const tb = t.troubleshooting;
-
-  // Troubleshoot page — chatbot only, no Known Issues accordion
+  const t      = WF.test;
+  const tb     = t ? t.troubleshooting : null;
   const noData = !tb || !tb.length;
+
+  // Build suggestion chips from all tb conditions
+  const suggChips = noData ? '' : tb.map(tr =>
+    `<button class="sett-suggestion-chip" onclick="wfChatQuery('${tr.condition.replace(/'/g,"\\'")}')">
+      ${tr.condition}
+    </button>`
+  ).join('');
 
   const content = `
     <div class="sa-stage-hdr">
       <div class="sa-stage-num primary">07</div>
       <div>
         <h2 class="sa-stage-title">Troubleshooting Assistant</h2>
-        <p class="sa-stage-desc">${WF.equipment.name} › ${WF.model.name} › ${t.name}</p>
+        <p class="sa-stage-desc">${WF.equipment.name} \u203a ${WF.model.name} \u203a ${t.name}</p>
       </div>
     </div>
 
-    ${noData ? `
-      <div class="wf-fallback">
-        <div class="wf-fallback-icon">&#128269;</div>
-        <div class="wf-fallback-title">Troubleshooting data not available</div>
-        <div class="wf-fallback-sub">Submit your problem below and our engineers will respond.</div>
-        <button class="btn btn-primary" onclick="document.getElementById('wfProbCard').scrollIntoView({behavior:'smooth'})">
-          &#128236; Submit Problem Form
+    <!-- SETT Chat Card -->
+    <div class="card wf-sec sett-chat-card">
+      <!-- Custom SETT Header -->
+      <div class="sett-chat-hdr">
+        <div class="sett-chat-hdr-icon">\u2699\ufe0f</div>
+        <div class="sett-chat-hdr-info">
+          <div class="sett-chat-hdr-title">SETT</div>
+          <div class="sett-chat-hdr-sub">Smart Equipment Troubleshooting Tool</div>
+        </div>
+        <div class="sett-chat-hdr-status">
+          <span class="sett-status-dot"></span>Online
+        </div>
+      </div>
+
+      <!-- Chat Messages Area -->
+      <div class="sett-chat-body">
+        <div class="chat-wrap" id="wfChat"></div>
+
+        <!-- Suggestion Chips -->
+        ${noData ? '' : `
+        <div class="sett-suggestions" id="sett-suggestions">
+          <div class="sett-suggestions-label">\ud83d\udca1 Common Issues \u2014 tap for instant help</div>
+          <div class="sett-suggestions-grid">
+            ${suggChips}
+          </div>
+        </div>`}
+      </div>
+
+      <!-- Input Footer -->
+      <div class="sett-chat-footer">
+        <input id="wfChatInp" class="sett-chat-inp" type="text"
+          placeholder="Type or select your problem\u2026"
+          onkeydown="if(event.key==='Enter') wfChatSend()">
+        <button class="sett-send-btn" onclick="wfChatSend()" aria-label="Send">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
         </button>
       </div>
-    ` : ''}
-
-    <div class="card wf-sec">
-      <div class="card-head"><span class="card-title">AI TROUBLESHOOT CHAT</span></div>
-      <div class="card-body">
-        <div class="chat-wrap" id="wfChat"></div>
-        <div class="quick-chips">
-          ${(tb || []).slice(0, 4).map(tr => `
-            <div class="chip" onclick="wfChatQuery('${tr.condition.replace(/'/g, "\\'").replace(/"/g, '&quot;')}')">
-              ${tr.condition.length > 40 ? tr.condition.slice(0, 40) + '&hellip;' : tr.condition}
-            </div>`).join('')}
-          <div class="chip" onclick="document.getElementById('wfProbCard').scrollIntoView({behavior:'smooth'})">Submit Problem</div>
-        </div>
-        <div class="chat-input-row">
-          <input id="wfChatInp" class="fi" type="text" placeholder="Describe your issue…"
-            onkeydown="if(event.key==='Enter') wfChatSend()">
-          <button class="btn btn-primary" onclick="wfChatSend()">Send</button>
-        </div>
-      </div>
     </div>
 
-    <div class="card wf-sec" id="wfProbCard" style="border-top:3px solid var(--blue)">
+    <!-- Submit Problem Form -->
+    <div class="card wf-sec" id="wfProbCard" style="margin-top:16px;border-top:3px solid var(--blue)">
       <div class="card-head">
+        <span class="card-icon">\ud83d\udcec</span>
         <span class="card-title">SUBMIT PROBLEM REPORT</span>
       </div>
       <div class="card-body">
         <p class="wf-para" style="margin-bottom:16px">
-          Can't find a solution? Submit your problem and our team will respond within 24–48 hours.
+          Can\u2019t find a solution above? Submit your problem and our team will respond within 24\u201348 hours.
         </p>
         ${wfProbFormHTML()}
       </div>
     </div>
 
     <div class="wf-new-test-row">
-      <button class="btn btn-outline" onclick="wfConfirmNewTest()">Start a New Test</button>
+      <button class="btn btn-outline" onclick="wfConfirmNewTest()">\ud83d\udd04 Start a New Test</button>
     </div>`;
 
   saWrap(el, 6, content);
 
-  // Init chat with context greeting
+  // Init SETT welcome message
   setTimeout(() => {
-    const noDataMsg = noData
-      ? '<br><em>Note: No pre-built troubleshooting data for this test. Please describe your issue.</em>'
-      : '';
-    wfChatAddMsg(`Hello! I am your troubleshooting assistant for <strong>${WF.equipment.name} &ndash; ${t.name}</strong>.<br>Describe your issue and I will help identify causes and recommended actions.${noDataMsg}`, 'ai');
+    const welcomeMsg = noData
+      ? `<strong>\u2699\ufe0f SETT \u2014 Smart Equipment Troubleshooting Tool</strong><br>Online for <strong>${WF.equipment.name} \u2013 ${t.name}</strong>.<br><br>\u26a0\ufe0f We are updating ourselves, kindly fill the form below for resolving the issue.`
+      : `<strong>\u2699\ufe0f SETT \u2014 Smart Equipment Troubleshooting Tool</strong><br>Online for <strong>${WF.equipment.name} \u2013 ${t.name}</strong>.<br><br>Select a common issue below or type your problem to get instant troubleshooting guidance.`;
+    wfChatAddMsg(welcomeMsg, 'ai');
   }, 100);
 }
+
+
+
 
 // ══════════════════════════════════════════════════════════════
 //  HOOK: Override wfOnEquip/wfOnModel/wfOnTest → Standalone
@@ -629,3 +707,24 @@ function wfOnTest(id) {
 //  wfExportCSV available in standalone context
 // ══════════════════════════════════════════════════════════════
 // (wfExportCSV and wfPrintReport are defined in workflow.js)
+
+// ══════════════════════════════════════════════════════════════
+//  LIMIT HINT HELPER (standalone)
+// ══════════════════════════════════════════════════════════════
+function saLimitHint(inp) {
+  const parts = [];
+  if (inp.min !== null && inp.max !== null) parts.push(`${inp.min} – ${inp.max} ${inp.unit || ''}`);
+  else if (inp.max !== null) parts.push(`≤ ${inp.max} ${inp.unit || ''}`);
+  else if (inp.min !== null) parts.push(`≥ ${inp.min} ${inp.unit || ''}`);
+  if (!parts.length) return '';
+  const warn = inp.warn !== null ? ` &nbsp;<span class="wf-lh-warn">warn @ ${inp.warn}</span>` : '';
+  return `<span class="wf-lh-text">Limit: ${parts[0]}${warn}</span>`;
+}
+
+// Update limit hint chip colour when a result is entered
+// (called by wfOnResult which is in workflow.js)
+function saUpdateLimitHint(id, status) {
+  const lh = document.getElementById(`lh_${id}`);
+  if (lh) lh.className = `wf-limit-hint lh-${status}`;
+}
+

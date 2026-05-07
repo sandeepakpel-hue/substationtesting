@@ -16,14 +16,14 @@ function renderChatbot() {
   container.innerHTML = `
     <div class="sec-header">
       <div class="sec-chip">MODULE 07</div>
-      <div class="sec-title">Smart Troubleshooting Chat</div>
+      <div class="sec-title"><span class="sett-title-icon">⚙️</span> SETT — Smart Equipment Troubleshooting Tool</div>
       <div class="sec-line"></div>
     </div>
     <div class="g2">
       <div class="card">
-        <div class="card-head"><span class="card-icon">🤖</span><span class="card-title">AI TROUBLESHOOTING — CGL SFM-40S EXPERT</span></div>
+        <div class="card-head"><span class="card-icon sett-card-icon">⚙️</span><span class="card-title">SETT — SMART EQUIPMENT TROUBLESHOOTING TOOL</span></div>
         <div class="card-body" style="padding-bottom:12px;">
-          <p style="font-size:12px;color:var(--text3);font-family:var(--mono);margin-bottom:10px;">POWERED BY CLAUDE AI · 400kV CGL SFM-40S Drawing Context Loaded</p>
+          <p style="font-size:12px;color:var(--text3);font-family:var(--mono);margin-bottom:10px;">POWERED BY SETT · Equipment-specific troubleshooting context loaded</p>
           <div class="chat-wrap" id="chatArea"></div>
           <div class="quick-chips">${chipsHtml}</div>
           <div class="chat-input-row">
@@ -45,8 +45,8 @@ function initChat() {
   chatInit = true;
   const area = document.getElementById('chatArea');
   if (area) area.innerHTML = '';
-  addMsg('ai', `<strong>CGL SFM-40S Troubleshooting Expert — Online</strong><br>
-I have your full 400kV CGL drawing loaded — TC1/TC2 circuits, TB terminals, relay designations, SF6 logic, anti-pumping, and pole discrepancy.<br><br>
+  addMsg('ai', `<strong>⚙️ SETT — Smart Equipment Troubleshooting Tool — Online</strong><br>
+Equipment context loaded: 400kV CGL SFM-40S — TC1/TC2 circuits, TB terminals, relay designations, SF6 logic, anti-pumping, pole discrepancy.<br><br>
 Describe your problem in plain English. For example:<br>
 • <em>"Breaker not opening — measured TC1 R-phase is 35Ω"</em><br>
 • <em>"SF6 alarm 63GA active on Y-phase after testing"</em><br>
@@ -57,7 +57,7 @@ function addMsg(role, html) {
   const area = document.getElementById('chatArea');
   const d = document.createElement('div');
   d.className = `chat-msg ${role}`;
-  d.innerHTML = `<div class="chat-av ${role === 'ai' ? 'ai' : 'usr'}">${role === 'ai' ? 'AI' : 'ENG'}</div><div class="chat-bbl ${role === 'ai' ? 'ai' : 'usr'}">${html}</div>`;
+  d.innerHTML = `<div class="chat-av ${role === 'ai' ? 'ai' : 'usr'}">${role === 'ai' ? '⚙' : 'ENG'}</div><div class="chat-bbl ${role === 'ai' ? 'ai' : 'usr'}">${html}</div>`;
   area.appendChild(d);
   area.scrollTop = area.scrollHeight;
 }

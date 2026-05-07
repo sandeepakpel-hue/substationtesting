@@ -62,34 +62,23 @@ function renderGuideSection(guide) {
     `;
   }
 
-  // Timing-specific extras
+  // Timing-specific extras — limits now shown on Enter Results page only
   let timingExtras = '';
   if (guide.limitsTable) {
-    const limRows = guide.limitsTable.map(r => `
-      <tr>
-        <td>${r.operation}</td>
-        <td class="pass mono">${r.min}</td>
-        <td class="fail mono">${r.max}</td>
-        <td class="fail mono">${r.poleDiff}</td>
-      </tr>
-    `).join('');
-    timingExtras += `
-      <div class="card" style="margin-bottom:14px;">
-        <div class="card-head"><span class="card-icon">📊</span><span class="card-title">TIMING LIMITS — SFM-40S</span></div>
-        <div class="card-body">
-          <table class="tbl">
-            <thead><tr><th>Operation</th><th>Min (ms)</th><th>Max (ms)</th><th>Pole Diff</th></tr></thead>
-            <tbody>${limRows}</tbody>
-          </table>
-          ${guide.coilInfo ? `
-            <div class="alert a-info" style="margin-top:12px;">
-              <div class="alert-title">${guide.coilInfo.title}</div>
-              <div class="alert-body">${guide.coilInfo.body}</div>
-            </div>
-          ` : ''}
-        </div>
+    timingExtras = `
+      <div class="alert a-info" style="margin-bottom:14px;">
+        <div class="alert-title">📐 Standard Limits on Enter Results</div>
+        <div class="alert-body">Timing limits are shown inline on the <strong>⑤ Enter Results</strong> page next to each input field, with real-time green / yellow / red validation.</div>
       </div>
     `;
+    if (guide.coilInfo) {
+      timingExtras += `
+        <div class="alert a-info">
+          <div class="alert-title">${guide.coilInfo.title}</div>
+          <div class="alert-body">${guide.coilInfo.body}</div>
+        </div>
+      `;
+    }
   }
 
   // IR-specific extras
